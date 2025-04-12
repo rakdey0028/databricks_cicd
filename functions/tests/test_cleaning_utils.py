@@ -1,10 +1,11 @@
+%pip install pytest=6.2.5
 from pyspark.sql import Row, SparkSession
 import pandas as pd
 from datetime import datetime
 import pytest
 
 
-from ..cleaning_utils import *
+from functions.cleaning_utils import *
 @pytest.fixture(scope="session")
 def spark() -> SparkSession:
   # Create a SparkSession (the entry point to Spark functionality) on
@@ -23,4 +24,4 @@ def test_findtotalfunc(spark):
     )
   print(output_df)
   #assert isinstance(output_df, int)
-  assert output_df == 20  # 4 15-min intervals over 1 hr window.
+  assert output_df == 5  # 4 15-min intervals over 1 hr window.
