@@ -16,7 +16,7 @@ from functions.cleaning_utils import *
 
 from pyspark.sql.types import *
 #@pytest.mark.usefixtures("spark")
-def test_findtotalfunc(spark):
+def test_findtotalfunc():
   cSchema = StructType([StructField("value", ArrayType(IntegerType()))])
   df=spark.createDataFrame(([[3,7,10]],),schema=cSchema)
   output_df = find_total(
