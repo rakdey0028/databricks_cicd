@@ -1,6 +1,8 @@
 from pyspark.sql import Row, SparkSession
 import pandas as pd
 from datetime import datetime
+import pytest
+
 
 from ..cleaning_utils import *
 @pytest.fixture(scope="session")
