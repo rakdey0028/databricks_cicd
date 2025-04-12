@@ -1,6 +1,6 @@
 attrs==21.2.0
 certifi==2021.10.8
-databricks-connect==9.1.2
+databricks-connect==10.4.59
 iniconfig==1.1.1
 numpy==1.21.3
 packaging==21.2
