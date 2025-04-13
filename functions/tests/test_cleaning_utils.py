@@ -3,6 +3,7 @@ from pyspark.sql import Row, SparkSession
 import pandas as pd
 from datetime import datetime
 import pytest
+import os
 from databricks.connect import DatabricksSession
 
 
