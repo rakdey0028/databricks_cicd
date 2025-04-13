@@ -52,7 +52,10 @@ jobs:
 
     - name: Run tests
       run: |
-        python -m pytest functions/tests/ -v
+        pytest functions --junitxml=unit-testresults.xml
 
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: unit-testresults.xml
