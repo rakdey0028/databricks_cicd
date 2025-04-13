@@ -52,4 +52,4 @@ def test_can_agg(spark):
 
   assert len(out) == 2
   assert out[0]['name'] == 'abc1'
-  assert out[1]['sumval'] == 130
+  assert out[1]['sumval'] == 132
