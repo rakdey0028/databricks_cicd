@@ -33,3 +33,23 @@ def test_findtotalfunc(spark):
   print(output_df)
   #assert isinstance(output_df, int)
   assert output_df == 55  # 4 15-min intervals over 1 hr window.
+
+@pytest.mark.usefixtures("spark")
+def test_can_agg(spark):
+  data = [
+            {'id': 1, 'name': 'abc1', 'value': 22},
+            {'id': 2, 'name': 'abc1', 'value': 23},
+            {'id': 3, 'name': 'def2', 'value': 33},
+            {'id': 4, 'name': 'def2', 'value': 44},
+            {'id': 5, 'name': 'def2', 'value': 55}
+        ]
+  df = spark.createDataFrame(data).coalesce(1)
+  df_agg = do_the_agg(df)
+
+  assert 'sumval' in df_agg.columns
+
+  out = df_agg.sort('name', 'sumval').collect()
+
+  assert len(out) == 2
+  assert out[0]['name'] == 'abc1'
+  assert out[1]['sumval'] == 130
