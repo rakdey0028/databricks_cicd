@@ -27,14 +27,28 @@ jobs:
         echo "DATABRICKS_PORT=${{ secrets.DATABRICKS_PORT }}" >> $GITHUB_ENV
 
     - name: Configure Databricks Connect
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        DATABRICKS_CLUSTER_ID: ${{ secrets.DATABRICKS_CLUSTER_ID }}
+        DATABRICKS_ORG_ID: ${{ secrets.DATABRICKS_ORG_ID }}
+        DATABRICKS_PORT: ${{ secrets.DATABRICKS_PORT || '15001' }}
       run: |
-        databricks-connect configure <<EOF
-        ${{ secrets.DATABRICKS_HOST }}
-        ${{ secrets.DATABRICKS_TOKEN }}
-        ${{ secrets.DATABRICKS_CLUSTER_ID }}
-        ${{ secrets.DATABRICKS_ORG_ID }}
-        ${{ secrets.DATABRICKS_PORT }}
+        # Create the configuration file directly
+        mkdir -p ~/.databricks-connect
+        cat > ~/.databricks-connect/config <<EOF
+        {
+          "host": "$DATABRICKS_HOST",
+          "token": "$DATABRICKS_TOKEN",
+          "cluster_id": "$DATABRICKS_CLUSTER_ID",
+          "org_id": "$DATABRICKS_ORG_ID",
+          "port": "$DATABRICKS_PORT"
+        }
         EOF
+        
+        # Verify configuration
+        databricks-connect test
+        echo "Databricks Connect configured successfully"
 
     - name: Run tests
       run: |
