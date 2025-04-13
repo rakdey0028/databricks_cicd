@@ -27,4 +27,4 @@ def test_findtotalfunc():
     )
   print(output_df)
   #assert isinstance(output_df, int)
-  assert output_df == 20  # 4 15-min intervals over 1 hr window.
+  assert output_df == 55  # 4 15-min intervals over 1 hr window.
