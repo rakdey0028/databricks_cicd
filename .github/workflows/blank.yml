@@ -1,25 +1,44 @@
 name: Databricks CI
 on: [push, pull_request]
-jobs: 
-  run-databricks-ci: 
+jobs:
+  test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - uses: actions/checkout@v2
-      - run: python -V
-      - run: pip install virtualenv
-      - run: virtualenv venv
-      - run: source venv/bin/activate
-      - run: pip install -r requirements.txt
-      - run: |
-          echo "y
-          ${{ secrets.DATABRICKS_HOST }}
-          ${{ secrets.DATABRICKS_TOKEN }}
-          ${{ secrets.DATABRICKS_CLUSTER_ID }}
-          ${{ secrets.DATABRICKS_WORKSPACE_ORG_ID }}
-          15001" | databricks-connect configure
-      - run: pytest functions --junitxml=unit-testresults.xml
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
-        with:
-          files: unit-testresults.xml
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        echo "DATABRICKS_HOST=${{ secrets.DATABRICKS_HOST }}" >> $GITHUB_ENV
+        echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
+        echo "DATABRICKS_CLUSTER_ID=${{ secrets.DATABRICKS_CLUSTER_ID }}" >> $GITHUB_ENV
+        echo "DATABRICKS_ORG_ID=${{ secrets.DATABRICKS_ORG_ID }}" >> $GITHUB_ENV
+        echo "DATABRICKS_PORT=${{ secrets.DATABRICKS_PORT }}" >> $GITHUB_ENV
+
+    - name: Configure Databricks Connect
+      run: |
+        databricks-connect configure <<EOF
+        ${{ secrets.DATABRICKS_HOST }}
+        ${{ secrets.DATABRICKS_TOKEN }}
+        ${{ secrets.DATABRICKS_CLUSTER_ID }}
+        ${{ secrets.DATABRICKS_ORG_ID }}
+        ${{ secrets.DATABRICKS_PORT }}
+        EOF
+
+    - name: Run tests
+      run: |
+        python -m pytest tests/ -v
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
