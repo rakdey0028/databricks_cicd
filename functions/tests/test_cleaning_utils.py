@@ -13,7 +13,11 @@ def spark() -> SparkSession:
   # Create a SparkSession (the entry point to Spark functionality) on
   # the cluster in the remote Databricks workspace. Unit tests do not
   # have access to this SparkSession by default.
-  return SparkSession.builder.getOrCreate()
+  is_ci = os.getenv("GITHUB_ACTIONS") == "true"
+  if is_ci:
+    return DatabricksSession.builder.getOrCreate()
+  else:  
+    return SparkSession.builder.getOrCreate()
 
 
 from pyspark.sql.types import *
