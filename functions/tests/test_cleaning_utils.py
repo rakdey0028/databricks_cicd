@@ -3,6 +3,8 @@ from pyspark.sql import Row, SparkSession
 import pandas as pd
 from datetime import datetime
 import pytest
+from databricks.connect import DatabricksSession
+
 
 
 from functions.cleaning_utils import *
@@ -17,11 +19,11 @@ from functions.cleaning_utils import *
 from pyspark.sql.types import *
 #@pytest.mark.usefixtures("spark")
 def test_findtotalfunc():
-  spark = SparkSession.builder.getOrCreate()
+  spark=DatabricksSession.builder.getOrCreate() #SparkSession.builder.getOrCreate()
   cSchema = StructType([StructField("value", ArrayType(IntegerType()))])
-  #df=spark.createDataFrame(([[3,7,10]],),schema=cSchema)
+  df=spark.createDataFrame(([[3,7,10]],),schema=cSchema)
   output_df = find_total(
-        10
+        df
     )
   print(output_df)
   #assert isinstance(output_df, int)
