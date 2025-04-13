@@ -8,18 +8,18 @@ from databricks.connect import DatabricksSession
 
 
 from functions.cleaning_utils import *
-# @pytest.fixture(scope="session")
-# def spark() -> SparkSession:
-#   # Create a SparkSession (the entry point to Spark functionality) on
-#   # the cluster in the remote Databricks workspace. Unit tests do not
-#   # have access to this SparkSession by default.
-#   return SparkSession.builder.getOrCreate()
+@pytest.fixture(scope="session")
+def spark() -> SparkSession:
+  # Create a SparkSession (the entry point to Spark functionality) on
+  # the cluster in the remote Databricks workspace. Unit tests do not
+  # have access to this SparkSession by default.
+  return SparkSession.builder.getOrCreate()
 
 
 from pyspark.sql.types import *
-#@pytest.mark.usefixtures("spark")
-def test_findtotalfunc():
-  spark=DatabricksSession.builder.getOrCreate() #SparkSession.builder.getOrCreate() 
+@pytest.mark.usefixtures("spark")
+def test_findtotalfunc(spark):
+  #spark=DatabricksSession.builder.getOrCreate() #SparkSession.builder.getOrCreate() 
   cSchema = StructType([StructField("value", ArrayType(IntegerType()))])
   df=spark.createDataFrame(([[3,7,45]],),schema=cSchema)
   output_df = find_total(
