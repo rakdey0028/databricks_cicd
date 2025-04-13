@@ -21,7 +21,7 @@ from pyspark.sql.types import *
 def test_findtotalfunc():
   spark=DatabricksSession.builder.getOrCreate() #SparkSession.builder.getOrCreate() 
   cSchema = StructType([StructField("value", ArrayType(IntegerType()))])
-  df=spark.createDataFrame(([[3,7,10]],),schema=cSchema)
+  df=spark.createDataFrame(([[3,7,45]],),schema=cSchema)
   output_df = find_total(
         df
     )
