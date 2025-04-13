@@ -52,7 +52,7 @@ jobs:
 
     - name: Run tests
       run: |
-        python -m pytest tests/ -v
+        python -m pytest functions/tests/ -v
 
     - name: Upload coverage
       uses: codecov/codecov-action@v3
