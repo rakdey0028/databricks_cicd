@@ -19,9 +19,9 @@ from pyspark.sql.types import *
 def test_findtotalfunc():
   spark = SparkSession.builder.getOrCreate()
   cSchema = StructType([StructField("value", ArrayType(IntegerType()))])
-  df=spark.createDataFrame(([[3,7,10]],),schema=cSchema)
+  #df=spark.createDataFrame(([[3,7,10]],),schema=cSchema)
   output_df = find_total(
-        df
+        10
     )
   print(output_df)
   #assert isinstance(output_df, int)
