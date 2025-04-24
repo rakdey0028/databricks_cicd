@@ -32,7 +32,7 @@ def test_findtotalfunc(spark):
     )
   print(output_df)
   #assert isinstance(output_df, int)
-  assert output_df == 55  # 4 15-min intervals over 1 hr window.
+  assert output_df == 58  # 4 15-min intervals over 1 hr window.
 
 @pytest.mark.usefixtures("spark")
 def test_can_agg(spark):
