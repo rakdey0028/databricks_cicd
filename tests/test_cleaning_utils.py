@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytest
 import os
+import sys
 from databricks.connect import DatabricksSession
 
 
