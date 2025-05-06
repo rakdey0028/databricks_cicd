@@ -52,7 +52,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest functions --junitxml=unit-testresults.xml
+        pytest --junitxml=unit-testresults.xml
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
