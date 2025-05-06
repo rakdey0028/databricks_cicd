@@ -8,7 +8,7 @@ from databricks.connect import DatabricksSession
 
 
 
-from functions.cleaning_utils import *
+from functions.src.cleaning_utils import *
 @pytest.fixture(scope="session")
 def spark() -> SparkSession:
   # Create a SparkSession (the entry point to Spark functionality) on
