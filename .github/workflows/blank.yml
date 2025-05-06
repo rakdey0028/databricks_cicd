@@ -54,12 +54,7 @@ jobs:
       run: |
         pytest functions --junitxml=unit-testresults.xml
 
-    - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: always()
-      with:
-        files: unit-testresults.xml
-
+  
   build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
