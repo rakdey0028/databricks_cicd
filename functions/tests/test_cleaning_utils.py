@@ -8,7 +8,7 @@ from databricks.connect import DatabricksSession
 
 
 
-from functions.cleaning_utils import *
+from functions.src.cleaning_utils import *
 @pytest.fixture(scope="session")
 def spark() -> SparkSession:
   # Create a SparkSession (the entry point to Spark functionality) on
@@ -32,7 +32,7 @@ def test_findtotalfunc(spark):
     )
   print(output_df)
   #assert isinstance(output_df, int)
-  assert output_df == 55  # 4 15-min intervals over 1 hr window.
+  assert output_df == 55   # 4 15-min intervals over 1 hr window.
 
 @pytest.mark.usefixtures("spark")
 def test_can_agg(spark):
