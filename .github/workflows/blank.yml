@@ -81,7 +81,19 @@ jobs:
       run: |
         python setup.py bdist_wheel
         echo "WHEEL_NAME=$(ls dist/*.whl)" >> $GITHUB_ENV
-        
+    
+    - name: Configure Databricks CLI
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        echo "Configuring Databricks CLI..."
+        cat > ~/.databrickscfg <<EOF
+        [DEFAULT]
+        host = $DATABRICKS_HOST
+        token = $DATABRICKS_TOKEN
+        EOF
+
         
     - name: Deploy to DBFS
       run: |
@@ -89,3 +101,4 @@ jobs:
         databricks fs mkdirs "dbfs:/FileStore/wheels/"
         databricks fs cp --overwrite "dist/$WHEEL_NAME" "dbfs:/FileStore/wheels/$WHEEL_NAME"
         echo "Deployed to: dbfs:/FileStore/wheels/$WHEEL_NAME"
+
