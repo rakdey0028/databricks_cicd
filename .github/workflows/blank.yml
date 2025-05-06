@@ -59,3 +59,33 @@ jobs:
       if: always()
       with:
         files: unit-testresults.xml
+
+  build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        pip install wheel databricks-cli
+        
+    - name: Build wheel
+      run: |
+        python setup.py bdist_wheel
+        echo "WHEEL_NAME=$(ls dist/*.whl)" >> $GITHUB_ENV
+        
+        
+    - name: Deploy to DBFS
+      run: |
+        echo "Deploying wheel to DBFS..."
+        databricks fs mkdirs "dbfs:/FileStore/wheels/"
+        databricks fs cp --overwrite "dist/$WHEEL_NAME" "dbfs:/FileStore/wheels/$WHEEL_NAME"
+        echo "Deployed to: dbfs:/FileStore/wheels/$WHEEL_NAME"
