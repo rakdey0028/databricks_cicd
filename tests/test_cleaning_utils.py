@@ -9,7 +9,7 @@ from databricks.connect import DatabricksSession
 
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.cleaning_utils import *
+from src.cleaning.cleaning_utils import *
 @pytest.fixture(scope="session")
 def spark() -> SparkSession:
   # Create a SparkSession (the entry point to Spark functionality) on
