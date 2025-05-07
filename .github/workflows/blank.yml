@@ -52,10 +52,56 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest functions --junitxml=unit-testresults.xml
+        pytest tests/ -v --junitxml=unit-testresults.xml
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
         files: unit-testresults.xml
+
+  build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' || github.event_name=='pull_request'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        pip install wheel databricks-cli
+        
+    - name: Build wheel
+      run: |
+        python setup.py bdist_wheel
+        ls -la dist/
+        echo "WHEEL_NAME=$(ls dist/*.whl)" >> $GITHUB_ENV
+        unzip -l dist/*.whl
+    
+    - name: Configure Databricks CLI
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        echo "Configuring Databricks CLI..."
+        cat > ~/.databrickscfg <<EOF
+        [DEFAULT]
+        host = $DATABRICKS_HOST
+        token = $DATABRICKS_TOKEN
+        EOF
+
+        
+    - name: Deploy to DBFS
+      run: |
+        echo "Deploying wheel to DBFS..."
+        databricks fs mkdirs "dbfs:/FileStore/wheels/"
+        databricks fs cp --overwrite "$WHEEL_NAME" "dbfs:/FileStore/wheels/$WHEEL_NAME"
+        echo "Deployed the: dbfs:/FileStore/wheels/$WHEEL_NAME"
+
+  
