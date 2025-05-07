@@ -4,7 +4,7 @@ setup(
     name="framework_wheel",
     version="0.1",
     package_dir={"": "src"},
-    packages=find_packages(where="src"),
+    py_modules=["cleaning_utils"]
     include_package_data=True,
     install_requires=[
         'pyspark>=3.5.0',
