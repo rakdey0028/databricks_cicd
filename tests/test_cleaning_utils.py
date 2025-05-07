@@ -4,11 +4,12 @@ import pandas as pd
 from datetime import datetime
 import pytest
 import os
+import sys
 from databricks.connect import DatabricksSession
 
 
-
-from functions.src.cleaning_utils import *
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.cleaning.cleaning_utils import *
 @pytest.fixture(scope="session")
 def spark() -> SparkSession:
   # Create a SparkSession (the entry point to Spark functionality) on
